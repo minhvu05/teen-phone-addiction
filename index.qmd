@@ -1,0 +1,106 @@
+---
+title: "Teen Phone Usage vs Psychological Metrics"
+format: html
+editor: visual
+---
+
+```{r}
+# Point Plot
+library(tidyverse)
+
+# Load the dataset
+data <- read.csv("teen_phone_addiction_dataset.csv")
+
+# Create individual plots
+p1 <- ggplot(data, aes(x = Daily_Usage_Hours, y = Anxiety_Level)) +
+  geom_point(alpha = 0.6, color = "#1f77b4") +
+  geom_smooth(method = "lm", se = TRUE, color = "black") +
+  labs(title = "Anxiety vs Daily Usage", x = "Daily Phone Usage (hours)", y = "Anxiety Level") +
+  theme_minimal()
+
+p2 <- ggplot(data, aes(x = Daily_Usage_Hours, y = Depression_Level)) +
+  geom_point(alpha = 0.6, color = "#ff7f0e") +
+  geom_smooth(method = "lm", se = TRUE, color = "black") +
+  labs(title = "Depression vs Daily Usage", x = "Daily Phone Usage (hours)", y = "Depression Level") +
+  theme_minimal()
+
+p3 <- ggplot(data, aes(x = Daily_Usage_Hours, y = Self_Esteem)) +
+  geom_point(alpha = 0.6, color = "#2ca02c") +
+  geom_smooth(method = "lm", se = TRUE, color = "black") +
+  labs(title = "Self-Esteem vs Daily Usage", x = "Daily Phone Usage (hours)", y = "Self-Esteem Score") +
+  theme_minimal()
+
+# Combine and display
+(p1 | p2 | p3)
+```
+
+```{r}
+# Box Plot
+library(tidyverse)
+
+# Load the dataset
+data <- read.csv("teen_phone_addiction_dataset.csv")
+
+# Bin daily usage into hourly intervals (e.g. "0–1", "1–2", ..., "9–10")
+data <- data %>%
+  mutate(Usage_Bin = cut(Daily_Usage_Hours, 
+                         breaks = seq(0, 10, by = 1), 
+                         include.lowest = TRUE,
+                         right = FALSE,
+                         labels = paste0(seq(0,9), "-", seq(1,10))))
+
+# Box plot: Anxiety
+ggplot(data, aes(x = Usage_Bin, y = Anxiety_Level)) +
+geom_boxplot(fill = "#1f77b4", alpha = 0.6) +
+labs(title = "Anxiety Level by Daily Usage Bin", x = "Daily Phone Usage (hours)", y = "Anxiety Level") +
+theme_minimal() +
+scale_y_continuous(breaks = seq(0, 10, 1))
+```
+
+```{r}
+# Bar Plot
+library(tidyverse)
+
+# Load the dataset
+data <- read.csv("teen_phone_addiction_dataset.csv")
+
+# Bin usage hours
+data <- data %>%
+  mutate(Usage_Bin = cut(Daily_Usage_Hours,
+                         breaks = seq(0, 10, by = 1),
+                         include.lowest = TRUE,
+                         right = FALSE,
+                         labels = paste0(seq(0,9), "-", seq(1,10))))
+
+# Convert psychological metrics into categorical levels
+data <- data %>%
+  mutate(
+    Anxiety_Cat = cut(Anxiety_Level, breaks = c(0, 3.3, 6.6, 10), 
+                      labels = c("Low", "Medium", "High"), include.lowest = TRUE),
+    Depression_Cat = cut(Depression_Level, breaks = c(0, 3.3, 6.6, 10), 
+                         labels = c("Low", "Medium", "High"), include.lowest = TRUE),
+    SelfEsteem_Cat = cut(Self_Esteem, breaks = c(0, 3.3, 6.6, 10), 
+                         labels = c("Low", "Medium", "High"), include.lowest = TRUE)
+  )
+
+# Plot: Anxiety levels by usage
+p1 <- ggplot(data, aes(x = Usage_Bin, fill = Anxiety_Cat)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Anxiety Level by Daily Usage", x = "Daily Usage (Hours)", y = "Count", fill = "Anxiety") +
+  theme_minimal()
+
+# Plot: Depression levels by usage
+p2 <- ggplot(data, aes(x = Usage_Bin, fill = Depression_Cat)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Depression Level by Daily Usage", x = "Daily Usage (Hours)", y = "Count", fill = "Depression") +
+  theme_minimal()
+
+# Plot: Self-esteem levels by usage
+p3 <- ggplot(data, aes(x = Usage_Bin, fill = SelfEsteem_Cat)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Self-Esteem Level by Daily Usage", x = "Daily Usage (Hours)", y = "Count", fill = "Self-Esteem") +
+  theme_minimal()
+
+# Combine plots vertically
+(p1 / p2 / p3)
+```
