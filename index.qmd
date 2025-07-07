@@ -2,11 +2,15 @@
 title: "Teen Phone Usage vs Psychological Metrics"
 format: html
 editor: visual
+execute: 
+  echo: false
 ---
 
 ```{r}
+#| message: false
 # Point Plot
 library(tidyverse)
+library(patchwork)
 
 # Load the dataset
 data <- read.csv("teen_phone_addiction_dataset.csv")
@@ -37,6 +41,7 @@ p3 <- ggplot(data, aes(x = Daily_Usage_Hours, y = Self_Esteem)) +
 ```{r}
 # Box Plot
 library(tidyverse)
+library(patchwork)
 
 # Load the dataset
 data <- read.csv("teen_phone_addiction_dataset.csv")
@@ -50,16 +55,35 @@ data <- data %>%
                          labels = paste0(seq(0,9), "-", seq(1,10))))
 
 # Box plot: Anxiety
-ggplot(data, aes(x = Usage_Bin, y = Anxiety_Level)) +
-geom_boxplot(fill = "#1f77b4", alpha = 0.6) +
-labs(title = "Anxiety Level by Daily Usage Bin", x = "Daily Phone Usage (hours)", y = "Anxiety Level") +
-theme_minimal() +
-scale_y_continuous(breaks = seq(0, 10, 1))
+p1 <- ggplot(data, aes(x = Usage_Bin, y = Anxiety_Level)) +
+  geom_boxplot(fill = "#1f77b4", alpha = 0.6) +
+  labs(title = "Anxiety Level by Daily Usage Bin", x = "Daily Phone Usage (hours)", y = "Anxiety Level") +
+  theme_minimal() +
+  scale_y_continuous(breaks = seq(0, 10, 1))
+
+# Box plot: Depression
+p2 <- ggplot(data, aes(x = Usage_Bin, y = Depression_Level)) +
+  geom_boxplot(fill = "#ff7f0e", alpha = 0.6) +
+  labs(title = "Depression Level by Daily Usage Bin", x = "Daily Phone Usage (hours)", y = "Depression Level") +
+  theme_minimal() +
+  scale_y_continuous(breaks = seq(0, 10, 1))
+
+# Box plot: Self-Esteem
+p3 <- ggplot(data, aes(x = Usage_Bin, y = Self_Esteem)) +
+  geom_boxplot(fill = "#2ca02c", alpha = 0.6) +
+  labs(title = "Self-Esteem by Daily Usage Bin", x = "Daily Phone Usage (hours)", y = "Self-Esteem Score") +
+  theme_minimal() +
+  scale_y_continuous(breaks = seq(0, 10, 1))
+
+# Combine all plots
+(p1 / p2 / p3) + plot_layout(guides = "collect")
+
 ```
 
 ```{r}
 # Bar Plot
 library(tidyverse)
+library(patchwork)
 
 # Load the dataset
 data <- read.csv("teen_phone_addiction_dataset.csv")
