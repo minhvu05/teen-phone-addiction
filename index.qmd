@@ -6,8 +6,14 @@ execute:
   echo: false
 ---
 
+In today's digital age, smartphones have become deeply integrated into teenagers' daily lives, raising concerns about their impact on mental health. This study explores the relationship between daily phone usage and key psychological outcomes—anxiety, depression, and self-esteem—among adolescents. Using survey data from teens aged 13–18, we examine how increasing screen time may be associated with shifts in emotional well-being. Through a combination of scatter plots, box plots, and bar charts, this analysis aims to uncover patterns and potential risks linked to heavy smartphone use, offering insights into how digital habits relate to psychological health in youth.
+\
+\
+\
+**Scatter Plot with Regression Lines**
 ```{r}
 #| message: false
+
 # Point Plot
 library(tidyverse)
 library(patchwork)
@@ -37,7 +43,11 @@ p3 <- ggplot(data, aes(x = Daily_Usage_Hours, y = Self_Esteem)) +
 # Combine and display
 (p1 | p2 | p3)
 ```
-
+These graphs show the relationship between daily phone usage hours and each psychological metric (anxiety, depression, self-esteem) as continuous variables. Each point represents a teen, and the trend line indicates whether increased usage is associated with higher or lower psychological scores. This type of graph highlights correlation strength and direction.
+\
+\
+\
+**Box Plots by Usage Bins**
 ```{r}
 # Box Plot
 library(tidyverse)
@@ -79,7 +89,11 @@ p3 <- ggplot(data, aes(x = Usage_Bin, y = Self_Esteem)) +
 (p1 / p2 / p3) + plot_layout(guides = "collect")
 
 ```
-
+Box plots group teens into hourly phone usage bins (e.g., 0–1, 1–2 hours) and display the distribution of each psychological score within those groups. They reveal medians, quartiles, and outliers — helping to visualize how psychological well-being varies across different levels of phone use.
+\
+\
+\
+**Bar Charts with Categorized Psychological Levels**
 ```{r}
 # Bar Plot
 library(tidyverse)
@@ -128,3 +142,4 @@ p3 <- ggplot(data, aes(x = Usage_Bin, fill = SelfEsteem_Cat)) +
 # Combine plots vertically
 (p1 / p2 / p3)
 ```
+These bar charts count how many teens fall into low, medium, or high levels of anxiety, depression, and self-esteem, grouped by their phone usage bin. This visualization helps highlight patterns in the frequency of psychological states as phone use increases, providing a categorical view of the trends.
